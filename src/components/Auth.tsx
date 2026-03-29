@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, googleProvider, db } from "../firebase";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, updateProfile } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { motion } from "motion/react";
-import { Mail, Lock, User as UserIcon, ArrowRight, Chrome, Eye, EyeOff, HelpCircle } from "lucide-react";
+import { Mail, Lock, User as UserIcon, ArrowRight, Chrome, Eye, EyeOff } from "lucide-react";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,23 +15,6 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
-  const handleResetPassword = async () => {
-    if (!email) {
-      setError("Please enter your email address to reset your password.");
-      return;
-    }
-    setLoading(true);
-    try {
-      await sendPasswordResetEmail(auth, email);
-      setError("Success! A password reset email has been sent to your inbox. Please check your email.");
-    } catch (err: any) {
-      console.error("[AuthPage] Reset Error:", err);
-      setError("Failed to send reset email. Please ensure the email is correct.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +51,7 @@ export default function AuthPage() {
       const errorCode = err.code || (err.message?.includes("auth/") ? err.message.match(/auth\/[a-z-]+/)?.[0] : null);
       
       if (errorCode === "auth/invalid-credential") {
-        setError("Invalid email or password. If you recently remixed this app, please create a NEW account as your old credentials won't work in this new project. Otherwise, try resetting your password.");
+        setError("Invalid email or password. If you recently remixed this app, please create a NEW account as your old credentials won't work in this new project.");
       } else if (errorCode === "auth/email-already-in-use") {
         setError("This email is already in use. Please log in instead or use a different email.");
       } else if (errorCode === "auth/weak-password") {
@@ -76,7 +59,7 @@ export default function AuthPage() {
       } else if (errorCode === "auth/user-not-found") {
         setError("No account found with this email. Please sign up instead.");
       } else if (errorCode === "auth/wrong-password") {
-        setError("Incorrect password. Please try again or reset it.");
+        setError("Incorrect password. Please try again.");
       } else {
         setError(err.message || "Authentication failed. Please check your connection and try again.");
       }
@@ -186,19 +169,6 @@ export default function AuthPage() {
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-
-          {isLogin && (
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={handleResetPassword}
-                className="text-xs text-orange-500 hover:text-orange-600 font-bold flex items-center gap-1 transition-colors"
-              >
-                <HelpCircle className="w-3 h-3" />
-                Forgot Password?
-              </button>
-            </div>
-          )}
 
           <button
             type="submit"

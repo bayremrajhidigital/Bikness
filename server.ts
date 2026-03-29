@@ -107,7 +107,7 @@ async function startServer() {
   });
 
   app.post("/api/posts", authenticate, async (req: any, res) => {
-    const { content, imageUrl, userName } = req.body;
+    const { content, userName } = req.body;
     const db = await readDB();
     
     const newPost = {
@@ -115,7 +115,6 @@ async function startServer() {
       userId: req.userId,
       userName,
       content,
-      imageUrl,
       createdAt: Date.now(),
       likes: 0
     };

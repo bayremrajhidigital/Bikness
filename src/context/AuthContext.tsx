@@ -9,7 +9,6 @@ interface UserProfile {
   name: string;
   isPremium: boolean;
   role: "user" | "admin";
-  points: number;
 }
 
 interface AuthContextType {
@@ -29,15 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
       if (userDoc.exists()) {
-        const data = userDoc.data();
-        // Ensure points exists for existing users
-        if (data.points === undefined) {
-          const updatedUser = { ...data, points: 0 } as UserProfile;
-          await setDoc(doc(db, "users", firebaseUser.uid), updatedUser, { merge: true });
-          setUser(updatedUser);
-        } else {
-          setUser(data as UserProfile);
-        }
+        setUser(userDoc.data() as UserProfile);
       } else {
         // Create user profile if it doesn't exist
         const newUser: UserProfile = {
@@ -46,7 +37,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: firebaseUser.displayName || "User",
           isPremium: true, // Now free for everyone
           role: "user",
-          points: 0,
         };
         await setDoc(doc(db, "users", firebaseUser.uid), newUser);
         setUser(newUser);

@@ -2,7 +2,7 @@ import * as React from "react";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { WorkoutProvider } from "./context/WorkoutContext";
-import { Dumbbell, LayoutDashboard, Users, Sparkles, LogOut, Menu, X, ClipboardList, Trophy } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Users, Sparkles, LogOut, Menu, X, ClipboardList } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import AuthPage from "./components/Auth";
 import Dashboard from "./components/Dashboard";
@@ -10,7 +10,6 @@ import ExerciseLibrary from "./components/ExerciseLibrary";
 import AIPlanner from "./components/AIPlanner";
 import Community from "./components/Community";
 import WorkoutTracker from "./components/WorkoutTracker";
-import Leaderboard from "./components/Leaderboard";
 import AITrainer from "./components/tools/AITrainer";
 import FoodAnalysis from "./components/tools/FoodAnalysis";
 import PhysiqueAnalysis from "./components/tools/PhysiqueAnalysis";
@@ -30,7 +29,6 @@ function Navbar() {
     { name: "Workout", path: "/workout", icon: ClipboardList },
     { name: "AI Plan", path: "/ai-plan", icon: Sparkles },
     { name: "Community", path: "/community", icon: Users },
-    { name: "Leaderboard", path: "/leaderboard", icon: Trophy },
   ];
 
   const handleLogout = () => {
@@ -275,7 +273,6 @@ export default function App() {
                 <Route path="/workout" element={<PrivateRoute><WorkoutTracker /></PrivateRoute>} />
                 <Route path="/ai-plan" element={<PrivateRoute><AIPlanner /></PrivateRoute>} />
                 <Route path="/community" element={<PrivateRoute><Community /></PrivateRoute>} />
-                <Route path="/leaderboard" element={<PrivateRoute><Leaderboard /></PrivateRoute>} />
                 <Route path="/tools/trainer" element={<PrivateRoute><AITrainer /></PrivateRoute>} />
                 <Route path="/tools/food-analysis" element={<PrivateRoute><FoodAnalysis /></PrivateRoute>} />
                 <Route path="/tools/physique-analysis" element={<PrivateRoute><PhysiqueAnalysis /></PrivateRoute>} />

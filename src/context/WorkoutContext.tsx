@@ -89,13 +89,6 @@ export function WorkoutProvider({ children }: { children: ReactNode }) {
 
       await addDoc(collection(db, "workouts"), workoutData);
       
-      // Increment user points (50 points per workout)
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
-        points: increment(50)
-      });
-
-      await refreshUser();
       clearWorkout();
     } catch (error) {
       console.error("Error saving workout:", error);
