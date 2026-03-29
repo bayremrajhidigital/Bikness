@@ -176,20 +176,21 @@ async function startServer() {
     res.json(newWorkout);
   });
 
-  // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
+  // Gemini API Key endpoint
+  app.get("/api/config", (req, res) => {
+    res.json({
+      geminiApiKey: process.env.GEMINI_API_KEY
     });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  }
+  });
+
+  // Serve static files from public
+  const publicPath = path.join(process.cwd(), "public");
+  app.use(express.static(publicPath));
+
+  // Fallback for SPA
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(publicPath, "index.html"));
+  });
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on http://localhost:${PORT}`);

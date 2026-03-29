@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BEKNAES - AI Fitness Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .tracking-tighter { letter-spacing: -0.05em; }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 10px;
+        }
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 min-h-screen">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <a href="#/" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center group-hover:rotate-12 transition-transform">
+                        <i data-lucide="dumbbell" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-tighter text-gray-900">BEKNAES</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <div id="desktop-nav" class="hidden md:flex items-center space-x-4">
+                    <!-- Nav items will be injected here -->
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="p-2 rounded-md text-gray-600 hover:text-orange-500 hover:bg-orange-50">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div id="mobile-nav" class="hidden md:hidden bg-white border-b border-gray-200 overflow-hidden">
+            <div id="mobile-nav-items" class="px-4 pt-2 pb-3 space-y-1">
+                <!-- Mobile nav items will be injected here -->
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app" class="pt-16 min-h-screen">
+        <div id="loading" class="flex items-center justify-center h-[calc(100vh-64px)]">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Global error:", message, "at", source, ":", lineno, ":", colno);
+            const app = document.getElementById('app');
+            if (app) {
+                app.innerHTML = `<div class="p-8 text-center text-red-500">
+                    <h2 class="text-2xl font-bold mb-2">Something went wrong</h2>
+                    <p class="text-sm">${message}</p>
+                    <p class="text-xs mt-4 text-gray-400">Check console for details</p>
+                </div>`;
+            }
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, orderBy, limit, onSnapshot, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { GoogleGenAI } from "https://esm.run/@google/genai";
+
+        try {
+            // Fetch config
+            const configResponse = await fetch('./firebase-applet-config.json');
+            if (!configResponse.ok) throw new Error("Failed to load Firebase config");
+            const firebaseConfig = await configResponse.json();
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+            const googleProvider = new GoogleAuthProvider();
+
+            // Expose to window for app.js
+            window.firebase = { auth, db, googleProvider, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, signInWithPopup, collection, doc, getDoc, getDocs, setDoc, addDoc, query, where, orderBy, limit, onSnapshot, getCountFromServer };
+            window.GoogleGenAI = GoogleGenAI;
+
+            // Load app.js
+            const script = document.createElement('script');
+            script.src = './js/app.js';
+            script.type = 'module';
+            document.body.appendChild(script);
+        } catch (error) {
+            console.error("Initialization error:", error);
+            document.getElementById('app').innerHTML = `<div class="p-8 text-center text-red-500">
+                <h2 class="text-2xl font-bold mb-2">Initialization Failed</h2>
+                <p class="text-sm">${error.message}</p>
+            </div>`;
+        }
+    </script>
+</body>
+</html>
