@@ -7,63 +7,87 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; color: #fff; font-family: 'Inter', sans-serif; }
-        .hero-bg { 
-            background: radial-gradient(circle at 50% 50%, #0a192f 0%, #000 100%); 
-            min-height: 100vh; 
-        }
-        .glass { 
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(25px); 
-            border: 1px solid rgba(56, 189, 248, 0.15); 
-        }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .bg-animate { background: radial-gradient(circle at 20% 30%, #0c2445 0%, #000 70%); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .neon-btn { transition: all 0.4s ease; }
+        .neon-btn:hover { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
+        #error-msg { display: none; }
     </style>
 </head>
-<body class="hero-bg flex items-center justify-center p-6">
+<body class="bg-animate flex items-center justify-center p-6">
 
-    <div class="max-w-md w-full glass p-10 rounded-[2.5rem]">
-        <div class="mb-10 text-center">
-            <h1 class="text-3xl font-black italic tracking-tighter">BIK<span class="text-sky-500">NESS</span></h1>
-            <p class="text-[9px] uppercase tracking-[0.5em] text-gray-500 mt-2 font-bold">New Athlete Registration</p>
+    <div class="max-w-md w-full glass p-10 rounded-[2.5rem] relative">
+        <div class="text-center mb-10">
+            <h1 class="text-5xl font-black italic tracking-tighter mb-2">BIK<span class="text-sky-500">NESS</span></h1>
+            <p class="text-[9px] uppercase tracking-[0.6em] text-sky-500/60 font-bold">New Athlete Registration</p>
         </div>
 
         <div class="space-y-5">
-            <div>
-                <input type="text" id="fullname" placeholder="Full Name" 
-                class="w-full bg-black/40 border border-white/5 p-4 rounded-xl outline-none focus:border-sky-500 transition text-sm">
-            </div>
-            <div>
-                <input type="email" id="email" placeholder="Email Address" 
-                class="w-full bg-black/40 border border-white/5 p-4 rounded-xl outline-none focus:border-sky-500 transition text-sm">
-            </div>
-            <div>
-                <input type="password" id="password" placeholder="Password (Min. 6 characters)" 
-                class="w-full bg-black/40 border border-white/5 p-4 rounded-xl outline-none focus:border-sky-500 transition text-sm">
-            </div>
+            <input type="text" id="fullname" placeholder="Full Name" class="w-full bg-black/60 border border-white/10 p-4 rounded-2xl outline-none focus:border-sky-500 transition-all text-sm">
+            <input type="email" id="email" placeholder="Email Address" class="w-full bg-black/60 border border-white/10 p-4 rounded-2xl outline-none focus:border-sky-500 transition-all text-sm">
+            <input type="password" id="password" placeholder="Security Key (6+ chars)" class="w-full bg-black/60 border border-white/10 p-4 rounded-2xl outline-none focus:border-sky-500 transition-all text-sm">
             
-            <button onclick="window.signUpEmail()" 
-                class="w-full bg-white text-black font-black py-4 rounded-xl uppercase tracking-widest hover:bg-sky-500 transition-all transform active:scale-95">
-                Create Account
-            </button>
+            <button id="signupBtn" class="neon-btn w-full bg-white text-black font-black py-4 rounded-2xl uppercase tracking-widest text-[11px]">Deploy Profile</button>
             
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-white/5"></div>
-                <span class="mx-4 text-gray-700 text-[10px] font-bold uppercase">OR</span>
-                <div class="flex-grow border-t border-white/5"></div>
+            <p id="error-msg" class="text-red-500 text-[10px] font-bold uppercase tracking-widest text-center mt-2"></p>
+
+            <div class="flex items-center gap-4 py-1">
+                <div class="flex-grow h-[1px] bg-white/5"></div>
+                <span class="text-[10px] text-gray-600 font-bold tracking-widest text-center">OR</span>
+                <div class="flex-grow h-[1px] bg-white/5"></div>
             </div>
 
-            <button onclick="window.loginGoogle()" 
-                class="w-full bg-white/5 border border-white/10 hover:bg-white/10 py-4 rounded-xl flex items-center justify-center gap-3 transition">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4" alt="G">
-                <span class="text-xs font-bold uppercase tracking-widest">Google Identity Sync</span>
+            <button id="googleBtn" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 transition-all transform active:scale-95">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4">
+                <span class="text-[10px] font-black uppercase tracking-widest">Register with Google</span>
             </button>
         </div>
 
-        <p class="mt-8 text-center text-xs text-gray-500 uppercase tracking-widest">
-            Already registered? <a href="login.html" class="text-sky-500 font-bold hover:text-white transition">login</a>
-        </p>
+        <div class="mt-10 text-center">
+            <p class="text-[11px] text-gray-500 uppercase tracking-widest">
+                Already registered? <a href="login.html" class="text-sky-500 font-black border-b border-sky-500/30 ml-1">Sign In</a>
+            </p>
+        </div>
     </div>
 
-    <script type="module" src="js/auth.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1gtjDSC1ek2PM8zYvRVpxCpoISmR8QuA",
+            authDomain: "bikness-ebef7.firebaseapp.com",
+            projectId: "bikness-ebef7",
+            appId: "1:586672790553:web:1fa67abdf7659a14215e88"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const errBox = document.getElementById('error-msg');
+
+        function showError(msg) {
+            errBox.innerText = msg;
+            errBox.style.display = 'block';
+        }
+
+        document.getElementById('signupBtn').addEventListener('click', async () => {
+            errBox.style.display = 'none';
+            const name = fullname.value;
+            if(!name || password.value.length < 6) return showError("Check Name or Password Length");
+
+            try {
+                const res = await createUserWithEmailAndPassword(auth, email.value, password.value);
+                await updateProfile(res.user, { displayName: name });
+                window.location.href = "login.html";
+            } catch (e) { showError(e.code.replace('auth/', '').replaceAll('-', ' ')); }
+        });
+
+        document.getElementById('googleBtn').addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); window.location.href = "index.html"; } 
+            catch (e) { showError("Google Registration Failed"); }
+        });
+    </script>
 </body>
 </html>

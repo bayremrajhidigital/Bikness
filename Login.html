@@ -3,114 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bikness | Identification</title>
+    <title>Bikness | Secure Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background-color: #000; 
-            color: #fff; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
-        }
-        /* High-end gradient background mixing Light Blue and Dark Blue */
-        .hero-bg { 
-            background: radial-gradient(circle at 50% 50%, #0a192f 0%, #000000 100%); 
-            min-height: 100vh; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        /* Glassmorphism effect for the login card */
-        .glass-card { 
-            background: rgba(255, 255, 255, 0.02); 
-            backdrop-filter: blur(30px); 
-            border: 1px solid rgba(56, 189, 248, 0.15); 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        /* Custom styling for inputs */
-        .input-field {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            border-color: #38bdf8;
-            background: rgba(56, 189, 248, 0.05);
-            outline: none;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
-        }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .bg-animate { background: radial-gradient(circle at 20% 30%, #0c2445 0%, #000 70%); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(56, 189, 248, 0.2); }
+        .neon-btn { transition: all 0.4s ease; }
+        .neon-btn:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+        #error-msg { display: none; }
     </style>
 </head>
-<body class="hero-bg p-6">
+<body class="bg-animate flex items-center justify-center p-6">
 
-    <div class="max-w-md w-full">
+    <div class="max-w-md w-full glass p-10 rounded-[2.5rem] relative">
         <div class="text-center mb-10">
-            <h1 class="text-5xl font-black italic tracking-tighter">
-                BIK<span class="text-sky-500">NESS</span>
-            </h1>
-            <p class="text-[10px] uppercase tracking-[0.5em] text-gray-500 mt-4 font-bold">
-                Elite Performance Base
+            <h1 class="text-5xl font-black italic tracking-tighter mb-2">BIK<span class="text-sky-500">NESS</span></h1>
+            <p class="text-[9px] uppercase tracking-[0.6em] text-sky-500/60 font-bold">Authorized Athlete Only</p>
+        </div>
+
+        <div class="space-y-5">
+            <input type="email" id="email" placeholder="Athlete Email" class="w-full bg-black/60 border border-white/10 p-4 rounded-2xl outline-none focus:border-sky-500 transition-all text-sm">
+            <input type="password" id="password" placeholder="Security Key" class="w-full bg-black/60 border border-white/10 p-4 rounded-2xl outline-none focus:border-sky-500 transition-all text-sm">
+            
+            <button id="loginBtn" class="neon-btn w-full bg-sky-500 text-black font-black py-4 rounded-2xl uppercase tracking-widest text-[11px]">Verify Identity</button>
+            
+            <p id="error-msg" class="text-red-500 text-[10px] font-bold uppercase tracking-widest text-center mt-2"></p>
+
+            <div class="flex items-center gap-4 py-1">
+                <div class="flex-grow h-[1px] bg-white/5"></div>
+                <span class="text-[10px] text-gray-600 font-bold tracking-widest text-center">OR</span>
+                <div class="flex-grow h-[1px] bg-white/5"></div>
+            </div>
+
+            <button id="googleBtn" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 transition-all transform active:scale-95">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4">
+                <span class="text-[10px] font-black uppercase tracking-widest">Sync with Google</span>
+            </button>
+        </div>
+
+        <div class="mt-10 text-center">
+            <p class="text-[11px] text-gray-500 uppercase tracking-widest">
+                New Prospect? <a href="signup.html" class="text-sky-500 font-black border-b border-sky-500/30 ml-1">Create Account</a>
             </p>
         </div>
-
-        <div class="glass-card p-10 rounded-[2.5rem] relative overflow-hidden">
-            <div class="relative z-10">
-                <h2 class="text-2xl font-black italic uppercase mb-8 border-l-4 border-sky-500 pl-4 tracking-tight">
-                    Identification
-                </h2>
-                
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest">Athlete Email</label>
-                        <input type="email" id="email" 
-                               class="input-field w-full px-5 py-4 rounded-2xl text-sm text-white" 
-                               placeholder="name@base.com">
-                    </div>
-
-                    <div>
-                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest">Security Key</label>
-                        <input type="password" id="password" 
-                               class="input-field w-full px-5 py-4 rounded-2xl text-sm text-white" 
-                               placeholder="••••••••">
-                    </div>
-
-                    <div class="pt-2 space-y-4">
-                        <button onclick="window.loginEmail()" 
-                                class="w-full bg-sky-500 hover:bg-white text-black font-black py-4 rounded-2xl text-[11px] uppercase tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-sky-500/20">
-                            Authorize Entry
-                        </button>
-
-                        <div class="relative flex py-2 items-center">
-                            <div class="flex-grow border-t border-white/5"></div>
-                            <span class="flex-shrink mx-4 text-gray-700 text-[10px] font-bold">OR</span>
-                            <div class="flex-grow border-t border-white/5"></div>
-                        </div>
-
-                        <button onclick="window.loginGoogle()" 
-                                class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-4 rounded-2xl text-[11px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4" alt="Google">
-                            Google Identity Sync
-                        </button>
-                    </div>
-                </div>
-
-                <div class="mt-10 text-center border-t border-white/5 pt-8">
-                    <p class="text-gray-500 text-[11px] uppercase tracking-widest">
-                        New to the base? 
-                        <a href="signup.html" class="text-sky-500 font-black hover:text-white transition-colors ml-2">
-                            Create Account
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <footer class="mt-12 text-center opacity-30">
-            <p class="text-[9px] uppercase tracking-[0.4em]">System Version 2.0.26</p>
-        </footer>
     </div>
 
-    <script type="module" src="js/auth.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1gtjDSC1ek2PM8zYvRVpxCpoISmR8QuA",
+            authDomain: "bikness-ebef7.firebaseapp.com",
+            projectId: "bikness-ebef7",
+            appId: "1:586672790553:web:1fa67abdf7659a14215e88"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        const errBox = document.getElementById('error-msg');
+
+        function showError(msg) {
+            errBox.innerText = msg;
+            errBox.style.display = 'block';
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            errBox.style.display = 'none';
+            try {
+                await signInWithEmailAndPassword(auth, email.value, password.value);
+                window.location.href = "index.html"; 
+            } catch (e) { showError(e.code.replace('auth/', '').replaceAll('-', ' ')); }
+        });
+
+        document.getElementById('googleBtn').addEventListener('click', async () => {
+            try { await signInWithPopup(auth, provider); window.location.href = "index.html"; } 
+            catch (e) { showError("Google Sync Failed"); }
+        });
+    </script>
 </body>
 </html>
