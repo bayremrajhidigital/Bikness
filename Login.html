@@ -3,138 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bikness | Access Base</title>
+    <title>Bikness | Identification</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* Base Styling: Solid Black */
         body { 
+            background-color: #000; 
+            color: #fff; 
             font-family: 'Inter', sans-serif; 
-            background-color: #000000; 
-            color: #ffffff; 
-            overflow: hidden; 
+            margin: 0;
         }
-
-        /* Dynamic Background: Deep Blue Glow effect behind the card */
+        /* High-end gradient background mixing Light Blue and Dark Blue */
         .hero-bg { 
-            background: radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.15) 0%, rgba(5, 7, 10, 1) 50%, #000000 100%); 
+            background: radial-gradient(circle at 50% 50%, #0a192f 0%, #000000 100%); 
+            min-height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        /* Card: Precise Deep Blue to Black Gradient */
-        .glass-dark { 
-            background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(0, 0, 0, 1) 100%);
-            backdrop-filter: blur(25px); 
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            box-shadow: 0 0 80px rgba(0, 0, 0, 0.9);
+        /* Glassmorphism effect for the login card */
+        .glass-card { 
+            background: rgba(255, 255, 255, 0.02); 
+            backdrop-filter: blur(30px); 
+            border: 1px solid rgba(56, 189, 248, 0.15); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-
-        .gradient-text {
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Custom styling for inputs */
+        .input-field {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
-
-        input::placeholder { color: #334155; }
-        
-        .btn-glow:hover {
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        .input-field:focus {
+            border-color: #38bdf8;
+            background: rgba(56, 189, 248, 0.05);
+            outline: none;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
         }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center hero-bg p-6">
+<body class="hero-bg p-6">
 
     <div class="max-w-md w-full">
         <div class="text-center mb-10">
-            <a href="index.html" class="text-4xl font-black italic tracking-tighter">
-                BIK<span class="gradient-text">NESS</span>
-            </a>
-            <p class="text-gray-500 text-[10px] uppercase tracking-[0.4em] mt-3 italic">The base of fitness</p>
+            <h1 class="text-5xl font-black italic tracking-tighter">
+                BIK<span class="text-sky-500">NESS</span>
+            </h1>
+            <p class="text-[10px] uppercase tracking-[0.5em] text-gray-500 mt-4 font-bold">
+                Elite Performance Base
+            </p>
         </div>
 
-        <div class="glass-dark p-10 rounded-[3rem] relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-48 h-48 bg-sky-500/10 blur-3xl rounded-full"></div>
-            
-            <h2 class="text-2xl font-black italic uppercase mb-8 tracking-tighter text-white/90">Access Base</h2>
-            
-            <div class="space-y-5">
-                <div>
-                    <label class="block text-[9px] uppercase font-bold text-gray-500 mb-2 tracking-[0.2em]">Email Address</label>
-                    <input type="email" id="email" class="w-full bg-black/60 border border-white/5 px-4 py-3.5 rounded-xl outline-none focus:border-sky-500 transition-all text-sm text-white" placeholder="name@example.com">
+        <div class="glass-card p-10 rounded-[2.5rem] relative overflow-hidden">
+            <div class="relative z-10">
+                <h2 class="text-2xl font-black italic uppercase mb-8 border-l-4 border-sky-500 pl-4 tracking-tight">
+                    Identification
+                </h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest">Athlete Email</label>
+                        <input type="email" id="email" 
+                               class="input-field w-full px-5 py-4 rounded-2xl text-sm text-white" 
+                               placeholder="name@base.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest">Security Key</label>
+                        <input type="password" id="password" 
+                               class="input-field w-full px-5 py-4 rounded-2xl text-sm text-white" 
+                               placeholder="••••••••">
+                    </div>
+
+                    <div class="pt-2 space-y-4">
+                        <button onclick="window.loginEmail()" 
+                                class="w-full bg-sky-500 hover:bg-white text-black font-black py-4 rounded-2xl text-[11px] uppercase tracking-[0.2em] transition-all transform active:scale-95 shadow-lg shadow-sky-500/20">
+                            Authorize Entry
+                        </button>
+
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-white/5"></div>
+                            <span class="flex-shrink mx-4 text-gray-700 text-[10px] font-bold">OR</span>
+                            <div class="flex-grow border-t border-white/5"></div>
+                        </div>
+
+                        <button onclick="window.loginGoogle()" 
+                                class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-4 rounded-2xl text-[11px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4" alt="Google">
+                            Google Identity Sync
+                        </button>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-[9px] uppercase font-bold text-gray-500 mb-2 tracking-[0.2em]">Password</label>
-                    <input type="password" id="password" class="w-full bg-black/60 border border-white/5 px-4 py-3.5 rounded-xl outline-none focus:border-sky-500 transition-all text-sm text-white" placeholder="••••••••">
+                <div class="mt-10 text-center border-t border-white/5 pt-8">
+                    <p class="text-gray-500 text-[11px] uppercase tracking-widest">
+                        New to the base? 
+                        <a href="signup.html" class="text-sky-500 font-black hover:text-white transition-colors ml-2">
+                            Create Account
+                        </a>
+                    </p>
                 </div>
-
-                <button onclick="loginWithEmail()" class="btn-glow w-full bg-sky-500 hover:bg-white text-black font-black py-4 rounded-xl text-[10px] uppercase tracking-[0.3em] transition-all transform hover:scale-[1.02] active:scale-95 shadow-lg shadow-sky-500/20">
-                    Sign In
-                </button>
-
-                <div class="relative flex py-4 items-center">
-                    <div class="flex-grow border-t border-white/5"></div>
-                    <span class="flex-shrink mx-4 text-gray-700 text-[9px] uppercase font-black tracking-widest">OR</span>
-                    <div class="flex-grow border-t border-white/5"></div>
-                </div>
-
-                <button onclick="loginWithGoogle()" class="w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-4 rounded-xl text-[10px] uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-3">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-4 h-4" alt="Google">
-                    Continue with Google
-                </button>
-            </div>
-
-            <div class="mt-10 text-center border-t border-white/5 pt-6">
-                <p class="text-gray-500 text-[11px] uppercase tracking-widest">New athlete? <a href="#" onclick="signUpWithEmail()" class="text-sky-500 font-black hover:underline transition-all">Create Base</a></p>
             </div>
         </div>
 
-        <footer class="mt-16 text-center">
-            <p class="text-gray-800 text-[9px] uppercase tracking-[0.5em] font-medium">© 2026 C</p>
+        <footer class="mt-12 text-center opacity-30">
+            <p class="text-[9px] uppercase tracking-[0.4em]">System Version 2.0.26</p>
         </footer>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD1gtjDSC1ek2PM8zYvRVpxCpoISmR8QuA",
-            authDomain: "bikness-ebef7.firebaseapp.com",
-            projectId: "bikness-ebef7",
-            storageBucket: "bikness-ebef7.firebasestorage.app",
-            messagingSenderId: "586672790553",
-            appId: "1:586672790553:web:1fa67abdf7659a14215e88",
-            measurementId: "G-D80CMTGKMQ"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-
-        window.loginWithEmail = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = "dashboard.html";
-            } catch (error) { alert("Access Denied: " + error.message); }
-        };
-
-        window.signUpWithEmail = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                alert("Base Account Created Successfully.");
-            } catch (error) { alert("Deployment Failed: " + error.message); }
-        };
-
-        window.loginWithGoogle = async () => {
-            try {
-                await signInWithPopup(auth, provider);
-                window.location.href = "dashboard.html";
-            } catch (error) { alert("Link Interrupted: " + error.message); }
-        };
-    </script>
+    <script type="module" src="js/auth.js"></script>
 </body>
 </html>
