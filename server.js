@@ -1,14 +1,26 @@
 const express = require('express');
-const path = require('path');
+const cors = require('cors');
+const { generatePlan } = require('./plan'); // Importing your logic
+
 const app = express();
-const PORT = 3000;
+app.use(cors());
+app.use(express.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
+const API_KEY = "AIzaSyCi_Lh1nMxIIexnHx6tArPRkNrbmnkhIV0";
 
-// SEO & Professional Routing
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'public', 'signup.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'public', 'dashboard.html')));
+app.post('/api/generate-protocol', (req, res) => {
+    const userData = req.body;
 
-app.listen(PORT, () => console.log(`Bikness HQ active on port ${PORT}`));
+    console.log("Processing data for Bikness Lab...");
+
+    // Call the logic from plan.js
+    const personalizedPlan = generatePlan(userData);
+
+    // Send the result back to the HTML
+    res.status(200).json({
+        success: true,
+        data: personalizedPlan
+    });
+});
+
+app.listen(3000, () => console.log('Bikness Backend Engine Running on Port 3000'));
