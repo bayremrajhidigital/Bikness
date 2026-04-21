@@ -3,198 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bikness | Smart Bio-Sync</title>
+    <title>Bikness | Neural AI Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
     <style>
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; }
-        .bg-animate { background: radial-gradient(circle at 50% 20%, #0c2445 0%, #000 70%); min-height: 100vh; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 32px; }
-        
-        input[type=range] { -webkit-appearance: none; background: rgba(255,255,255,0.05); border-radius: 10px; height: 3px; width: 100%; cursor: pointer; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%; background: #fff; cursor: pointer; border: 2px solid #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.5); }
-
+        .bg-animate { background: radial-gradient(circle at 50% 20%, #1a365d 0%, #000 70%); min-height: 100vh; }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px; }
+        .stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; }
         .status-dot { height: 4px; border-radius: 2px; flex: 1; transition: all 0.4s ease; opacity: 0.1; }
-        .active-dot { opacity: 1; box-shadow: 0 0 8px currentColor; }
-        
-        .stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; }
+        .active-dot { opacity: 1; box-shadow: 0 0 10px currentColor; }
+        input[type=range] { -webkit-appearance: none; background: rgba(255,255,255,0.1); border-radius: 10px; height: 4px; width: 100%; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #fff; border: 2px solid #38bdf8; cursor: pointer; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
         .hidden { display: none; }
+        .loading-shimmer { background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
-<body class="bg-animate flex items-center justify-center p-6">
+<body class="bg-animate p-4 md:p-10 flex items-center justify-center">
 
-    <div class="w-full max-w-md space-y-6">
+    <div class="w-full max-w-2xl space-y-8">
         
-        <div class="text-center mb-4">
-            <h1 class="text-3xl font-black italic tracking-tighter uppercase">BIK<span class="text-sky-400">NESS</span></h1>
-            <p class="text-[8px] text-gray-500 tracking-[0.5em] font-bold uppercase mt-1">Bio-Metric Protocol</p>
+        <div class="text-center">
+            <h1 class="text-4xl font-black italic tracking-tighter uppercase">BIK<span class="text-sky-400">NESS</span></h1>
+            <div class="inline-block px-3 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full mt-2">
+                <p class="text-[9px] text-sky-400 tracking-[0.3em] font-bold uppercase">Powered by Gemini AI Engine</p>
+            </div>
         </div>
 
-        <div id="input-section" class="glass p-8 space-y-8">
-            <div id="status-box" class="bg-white/5 rounded-2xl p-4 border border-white/5 text-center transition-all duration-500">
-                <div id="status-text" class="text-sm font-black uppercase tracking-widest text-gray-500">Awaiting Data</div>
-                <div class="flex gap-2 mt-3 px-4">
-                    <div id="dot-under" class="status-dot bg-yellow-400 text-yellow-400"></div>
-                    <div id="dot-perfect" class="status-dot bg-green-500 text-green-500"></div>
-                    <div id="dot-over" class="status-dot bg-red-600 text-red-600"></div>
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <div class="space-y-3">
-                    <div class="flex justify-between items-end">
-                        <label class="text-[9px] font-bold text-gray-400 tracking-widest uppercase">Mass (Kg)</label>
-                        <span id="w-label" class="text-2xl font-black italic text-white">75</span>
+        <div id="input-section" class="glass p-8 md:p-12 space-y-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Weight (Kg)</label>
+                            <span id="w-val" class="text-2xl font-black italic">75</span>
+                        </div>
+                        <input type="range" id="weight" min="40" max="200" value="75" oninput="sync()">
                     </div>
-                    <input type="range" id="weight" min="30" max="250" value="75" oninput="sync()">
-                </div>
 
-                <div class="space-y-3">
-                    <div class="flex justify-between items-end">
-                        <label class="text-[9px] font-bold text-gray-400 tracking-widest uppercase">Stature (Cm)</label>
-                        <span id="h-label" class="text-2xl font-black italic text-white">175</span>
+                    <div>
+                        <div class="flex justify-between items-end mb-3">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Height (Cm)</label>
+                            <span id="h-val" class="text-2xl font-black italic">175</span>
+                        </div>
+                        <input type="range" id="height" min="130" max="230" value="175" oninput="sync()">
                     </div>
-                    <input type="range" id="height" min="100" max="220" value="175" oninput="sync()">
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Training Days</label>
+                            <select id="train-days" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none">
+                                <option value="2">2 Days</option>
+                                <option value="3">3 Days</option>
+                                <option value="4" selected>4 Days</option>
+                                <option value="5">5 Days</option>
+                                <option value="6">6 Days</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Age</label>
+                            <input type="number" id="age" value="22" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none focus:border-sky-400">
+                        </div>
+                    </div>
+
                     <div class="space-y-2">
-                        <label class="text-[9px] font-bold text-gray-400 tracking-widest uppercase">Gender</label>
-                        <select id="gender" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none font-bold text-xs appearance-none">
-                            <option value="male" class="bg-black">Male</option>
-                            <option value="female" class="bg-black">Female</option>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Goal</label>
+                        <select id="goal" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none">
+                            <option value="lose weight">Fat Loss / Shredding</option>
+                            <option value="build muscle">Muscle Gain / Bulking</option>
+                            <option value="maintain">Maintenance / Performance</option>
                         </select>
                     </div>
-                    <div class="space-y-2">
-                        <label class="text-[9px] font-bold text-gray-400 tracking-widest uppercase">Age</label>
-                        <input type="number" id="age" value="22" class="w-full bg-white/5 border border-white/10 p-3 rounded-xl outline-none font-bold text-xs focus:border-sky-400">
-                    </div>
                 </div>
             </div>
 
-            <button onclick="generatePlan()" id="btn-text" class="w-full bg-white text-black font-black py-4 rounded-xl uppercase tracking-[0.3em] text-[10px] hover:bg-sky-400 transition-all">
-                Initialize Protocol_
+            <button onclick="callGeminiAPI()" id="gen-btn" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.4em] text-xs hover:bg-sky-400 transition-all shadow-xl shadow-sky-500/10">
+                Execute AI Protocol_
             </button>
         </div>
 
-        <div id="result-section" class="glass p-8 space-y-6 hidden animate-in fade-in zoom-in duration-500">
+        <div id="loading-section" class="hidden glass p-12 text-center space-y-6">
+            <div class="w-16 h-16 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <p class="text-xs font-bold tracking-[0.3em] text-sky-400 animate-pulse uppercase">Gemini Neural Link Processing...</p>
+        </div>
+
+        <div id="result-section" class="hidden space-y-6 pb-20">
             <div class="text-center">
-                <h2 id="res-status" class="text-2xl font-black italic uppercase text-sky-400">---</h2>
-                <p id="res-id" class="text-[8px] text-gray-500 tracking-widest mt-1">---</p>
+                <h2 id="res-status" class="text-3xl font-black italic text-sky-400 uppercase">AI ANALYSIS READY</h2>
+                <p class="text-[9px] text-gray-600 tracking-widest mt-2 uppercase font-bold">Encrypted Data Stream Received</p>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="stat-card p-4 text-center">
-                    <p class="text-[8px] font-bold text-gray-500 uppercase">Calories</p>
-                    <div id="res-cal" class="text-xl font-black text-white">---</div>
+            <div id="ai-content" class="prose prose-invert max-w-none space-y-6">
                 </div>
-                <div class="stat-card p-4 text-center">
-                    <p class="text-[8px] font-bold text-gray-500 uppercase">Protein</p>
-                    <div id="res-prot" class="text-xl font-black text-white">---</div>
-                </div>
-            </div>
 
-            <div class="stat-card p-4 text-center">
-                <p class="text-[8px] font-bold text-gray-500 uppercase">AI Advice</p>
-                <div id="res-advice" class="text-[10px] font-medium text-gray-400 italic mt-1">---</div>
-            </div>
-
-            <button onclick="location.reload()" class="w-full border border-white/10 text-white font-black py-3 rounded-xl uppercase tracking-[0.3em] text-[9px] hover:bg-white/5 transition-all">
-                New Scan_
-            </button>
+            <button onclick="location.reload()" class="w-full py-6 text-[10px] font-black text-gray-600 hover:text-white uppercase tracking-widest transition-colors">Start New Simulation_</button>
         </div>
-
-        <p class="text-[8px] text-center text-gray-700 uppercase tracking-widest">
-            Neural Link Status: <span class="text-sky-500" id="link-status">Stable</span>
-        </p>
-
     </div>
 
-    <script>
-        function sync() {
-            const w = document.getElementById('weight').value;
-            const h = document.getElementById('height').value;
-            const bmi = w / ((h/100)**2);
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
 
-            document.getElementById('w-label').innerText = w;
-            document.getElementById('h-label').innerText = h;
+        // مفتاحك السري (ملاحظة: في الإنتاج، هذا يجب أن يكون في الباك أند)
+        const API_KEY = "AIzaSyCi_Lh1nMxIIexnHx6tArPRkNrbmnkhIV0";
+        const genAI = new GoogleGenerativeAI(API_KEY);
 
-            const text = document.getElementById('status-text');
-            const dots = {
-                under: document.getElementById('dot-under'),
-                perfect: document.getElementById('dot-perfect'),
-                over: document.getElementById('dot-over')
-            };
+        window.callGeminiAPI = async function() {
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+            const age = document.getElementById('age').value;
+            const days = document.getElementById('train-days').value;
+            const goal = document.getElementById('goal').value;
 
-            Object.values(dots).forEach(d => d.classList.remove('active-dot'));
-            
-            if(bmi < 18.5) {
-                text.innerText = "Underweight";
-                text.style.color = "#fbbf24";
-                dots.under.classList.add('active-dot');
-            } else if(bmi >= 18.5 && bmi <= 25) {
-                text.innerText = "Perfect Condition";
-                text.style.color = "#22c55e";
-                dots.perfect.classList.add('active-dot');
-            } else {
-                text.innerText = "Excess Mass";
-                text.style.color = "#ef4444";
-                dots.over.classList.add('active-dot');
-            }
-        }
-
-        async function generatePlan() {
-            const btn = document.getElementById('btn-text');
-            const linkStatus = document.getElementById('link-status');
-            
-            // جمع البيانات
-            const payload = {
-                weight: document.getElementById('weight').value,
-                height: document.getElementById('height').value,
-                gender: document.getElementById('gender').value,
-                age: document.getElementById('age').value,
-                bmi: (document.getElementById('weight').value / ((document.getElementById('height').value/100)**2)).toFixed(2)
-            };
-
-            // تحريك التحميل
-            btn.innerText = "ANALYZING BIOMETRICS...";
-            btn.disabled = true;
-            linkStatus.innerText = "PROCESSING";
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('loading-section').classList.remove('hidden');
 
             try {
-                // الاتصال بالباك أند (plan.js)
-                const response = await fetch('http://localhost:3000/api/generate-protocol', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                
+                const prompt = `Act as a professional fitness AI coach for a fitness app called Bikness. 
+                Generate a 4-week fitness and nutrition protocol for a user with these stats:
+                Weight: ${weight}kg, Height: ${height}cm, Age: ${age}, Training: ${days} days/week, Goal: ${goal}.
+                Output the response in HTML format (using tailwind classes if needed). 
+                Include: 
+                1. A summary card with Calories, Protein, Carbs, Fats.
+                2. A "Bikness Pro Tips" section.
+                3. A structured 4-week workout schedule table.
+                Keep the tone professional, futuristic, and high-performance. Do not include Markdown blocks like \`\`\`html.`;
 
-                const result = await response.json();
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                const text = response.text();
 
-                if (result.success) {
-                    // إخفاء المدخلات وإظهار النتيجة بعد تأخير بسيط للجمالية
-                    setTimeout(() => {
-                        document.getElementById('input-section').classList.add('hidden');
-                        document.getElementById('result-section').classList.remove('hidden');
-                        
-                        // تعبئة البيانات من plan.js
-                        document.getElementById('res-status').innerText = result.data.status;
-                        document.getElementById('res-id').innerText = `ID: ${result.data.protocolName}`;
-                        document.getElementById('res-cal').innerText = result.data.dailyTarget.calories;
-                        document.getElementById('res-prot').innerText = result.data.dailyTarget.protein;
-                        document.getElementById('res-advice').innerText = result.data.recommendation;
-                        
-                        linkStatus.innerText = "STABLE";
-                    }, 1000);
-                }
+                document.getElementById('loading-section').classList.add('hidden');
+                document.getElementById('result-section').classList.remove('hidden');
+                document.getElementById('ai-content').innerHTML = text;
+
             } catch (error) {
-                alert("Backend Error. Make sure server.js is running.");
-                btn.innerText = "Initialize Protocol_";
-                btn.disabled = false;
+                console.error(error);
+                alert("AI Engine Error: Check API Key or Internet Connection.");
+                location.reload();
             }
         }
 
-        sync();
+        window.sync = function() {
+            document.getElementById('w-val').innerText = document.getElementById('weight').value;
+            document.getElementById('h-val').innerText = document.getElementById('height').value;
+        }
     </script>
 </body>
 </html>
+
