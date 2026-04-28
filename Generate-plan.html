@@ -1,163 +1,121 @@
-l<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bikness | Neural AI Engine</title>
+    <title>Bikness | AI Protocol</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <script type="importmap">
-      {
-        "imports": {
-          "@google/generative-ai": "https://esm.run/@google/generative-ai"
-        }
+    {
+      "imports": {
+        "@google/generative-ai": "https://esm.run/@google/generative-ai"
       }
+    }
     </script>
+
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; }
-        .bg-animate { background: radial-gradient(circle at 50% 20%, #1a365d 0%, #000 70%); min-height: 100vh; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(40px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 32px; }
-        .stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px; padding: 20px; }
-        .status-dot { height: 4px; border-radius: 2px; flex: 1; transition: all 0.4s ease; opacity: 0.1; }
-        .active-dot { opacity: 1; box-shadow: 0 0 10px currentColor; }
-        input[type=range] { -webkit-appearance: none; background: rgba(255,255,255,0.1); border-radius: 10px; height: 4px; width: 100%; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%; background: #fff; border: 2px solid #38bdf8; cursor: pointer; box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        .bg-gradient { background: radial-gradient(circle at top, #1a365d 0%, #000 70%); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
+        .neon-blue { text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); }
+        .btn-glow:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
+        
+        /* Loading Animation */
+        .loader { width: 48px; height: 48px; border: 5px solid #fff; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .hidden { display: none; }
-        .loading-shimmer { background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
     </style>
 </head>
-<body class="bg-animate p-4 md:p-10 flex items-center justify-center">
+<body class="bg-gradient p-4 md:p-10 flex flex-col items-center">
 
-    <div class="w-full max-w-2xl space-y-8">
-        
+    <div class="w-full max-w-2xl space-y-10">
         <div class="text-center">
-            <h1 class="text-4xl font-black italic tracking-tighter uppercase">BIK<span class="text-sky-400">NESS</span></h1>
-            <div class="inline-block px-3 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full mt-2">
-                <p class="text-[9px] text-sky-400 tracking-[0.3em] font-bold uppercase">Powered by Gemini AI Engine</p>
-            </div>
+            <h1 class="text-5xl font-black italic tracking-tighter uppercase neon-blue">BIK<span class="text-sky-400">NESS</span></h1>
+            <p class="text-[10px] text-gray-500 tracking-[0.5em] font-bold uppercase mt-2">Neural Fitness Engine v1.0</p>
         </div>
 
-        <div id="input-section" class="glass p-8 md:p-12 space-y-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-6">
-                    <div>
-                        <div class="flex justify-between items-end mb-3">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Weight (Kg)</label>
-                            <span id="w-val" class="text-2xl font-black italic">75</span>
-                        </div>
-                        <input type="range" id="weight" min="40" max="200" value="75" oninput="sync()">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between items-end mb-3">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Height (Cm)</label>
-                            <span id="h-val" class="text-2xl font-black italic">175</span>
-                        </div>
-                        <input type="range" id="height" min="130" max="230" value="175" oninput="sync()">
-                    </div>
+        <div id="input-ui" class="glass p-8 space-y-8 animate-in fade-in duration-700">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current Weight (Kg)</label>
+                    <input type="number" id="weight" value="75" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500 transition-all">
                 </div>
-
-                <div class="space-y-6">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Training Days</label>
-                            <select id="train-days" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none">
-                                <option value="2">2 Days</option>
-                                <option value="3">3 Days</option>
-                                <option value="4" selected>4 Days</option>
-                                <option value="5">5 Days</option>
-                                <option value="6">6 Days</option>
-                            </select>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Age</label>
-                            <input type="number" id="age" value="22" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none focus:border-sky-400">
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Goal</label>
-                        <select id="goal" class="w-full bg-white/5 border border-white/10 p-4 rounded-2xl font-bold text-xs outline-none">
-                            <option value="lose weight">Fat Loss / Shredding</option>
-                            <option value="build muscle">Muscle Gain / Bulking</option>
-                            <option value="maintain">Maintenance / Performance</option>
-                        </select>
-                    </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Training Goal</label>
+                    <select id="goal" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500 transition-all">
+                        <option value="Massive Bulk" class="bg-black">Massive Bulk</option>
+                        <option value="Extreme Shred" class="bg-black">Extreme Shred</option>
+                        <option value="Athletic Performance" class="bg-black">Athletic Performance</option>
+                    </select>
                 </div>
             </div>
 
-            <button onclick="callGeminiAPI()" id="gen-btn" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.4em] text-xs hover:bg-sky-400 transition-all shadow-xl shadow-sky-500/10">
+            <button onclick="executeProtocol()" id="action-btn" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.4em] text-xs btn-glow transition-all active:scale-95">
                 Execute AI Protocol_
             </button>
         </div>
 
-        <div id="loading-section" class="hidden glass p-12 text-center space-y-6">
-            <div class="w-16 h-16 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-            <p class="text-xs font-bold tracking-[0.3em] text-sky-400 animate-pulse uppercase">Gemini Neural Link Processing...</p>
+        <div id="loading-ui" class="hidden text-center space-y-4 py-20">
+            <span class="loader"></span>
+            <p class="text-sky-400 text-xs font-black tracking-widest animate-pulse uppercase">Syncing with Gemini Neural Link...</p>
         </div>
 
-        <div id="result-section" class="hidden space-y-6 pb-20">
-            <div class="text-center">
-                <h2 id="res-status" class="text-3xl font-black italic text-sky-400 uppercase">AI ANALYSIS READY</h2>
-                <p class="text-[9px] text-gray-600 tracking-widest mt-2 uppercase font-bold">Encrypted Data Stream Received</p>
+        <div id="output-ui" class="hidden space-y-6 pb-20 animate-in slide-in-from-bottom duration-700">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-black italic uppercase text-sky-400">Calculated Protocol</h2>
+                <button onclick="location.reload()" class="text-[9px] font-bold text-gray-500 hover:text-white uppercase tracking-widest">Reset Analysis</button>
             </div>
-
-            <div id="ai-content" class="prose prose-invert max-w-none space-y-6">
+            <div id="ai-response" class="glass p-6 text-sm text-gray-300 leading-relaxed border-sky-500/20 shadow-2xl shadow-sky-500/5">
                 </div>
-
-            <button onclick="location.reload()" class="w-full py-6 text-[10px] font-black text-gray-600 hover:text-white uppercase tracking-widest transition-colors">Start New Simulation_</button>
         </div>
     </div>
 
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // مفتاحك السري (ملاحظة: في الإنتاج، هذا يجب أن يكون في الباك أند)
-        const API_KEY = "AIzaSyCi_Lh1nMxIIexnHx6tArPRkNrbmnkhIV0";
-        const genAI = new GoogleGenerativeAI(API_KEY);
+        // حط الـ API Key الجديد هنا يا بايرم
+        const API_KEY = "AIzaSyCcXYIIOYNxyitBzfQl_0TaQD2xQB0yik0"; 
 
-        window.callGeminiAPI = async function() {
+        window.executeProtocol = async function() {
             const weight = document.getElementById('weight').value;
-            const height = document.getElementById('height').value;
-            const age = document.getElementById('age').value;
-            const days = document.getElementById('train-days').value;
             const goal = document.getElementById('goal').value;
-
-            document.getElementById('input-section').classList.add('hidden');
-            document.getElementById('loading-section').classList.remove('hidden');
+            const btn = document.getElementById('action-btn');
+            
+            // UI Toggle
+            document.getElementById('input-ui').classList.add('hidden');
+            document.getElementById('loading-ui').classList.remove('hidden');
 
             try {
+                const genAI = new GoogleGenerativeAI(AIzaSyCcXYIIOYNxyitBzfQl_0TaQD2xQB0yik0);
                 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                
-                const prompt = `Act as a professional fitness AI coach for a fitness app called Bikness. 
-                Generate a 4-week fitness and nutrition protocol for a user with these stats:
-                Weight: ${weight}kg, Height: ${height}cm, Age: ${age}, Training: ${days} days/week, Goal: ${goal}.
-                Output the response in HTML format (using tailwind classes if needed). 
-                Include: 
-                1. A summary card with Calories, Protein, Carbs, Fats.
-                2. A "Bikness Pro Tips" section.
-                3. A structured 4-week workout schedule table.
-                Keep the tone professional, futuristic, and high-performance. Do not include Markdown blocks like \`\`\`html.`;
+
+                const prompt = `Act as the Bikness AI Elite Coach. Generate a high-performance 4-week protocol for a user.
+                Stats: Weight ${weight}kg, Goal: ${goal}.
+                Your response must be in clean HTML format (no markdown blocks). 
+                Include:
+                1. A 'Daily Bio-Metrics' card with Calories, Protein, Carbs, Fats.
+                2. A '4-Week Training Cycle' table.
+                3. Use Tailwind CSS classes for styling (e.g., text-sky-400 for highlights, bg-white/5 for cards).
+                Tone: Futuristic, Professional, Motivational.`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
-                const text = response.text();
+                const htmlContent = response.text();
 
-                document.getElementById('loading-section').classList.add('hidden');
-                document.getElementById('result-section').classList.remove('hidden');
-                document.getElementById('ai-content').innerHTML = text;
+                // Display Result
+                document.getElementById('loading-ui').classList.add('hidden');
+                document.getElementById('output-ui').classList.remove('hidden');
+                document.getElementById('ai-response').innerHTML = htmlContent;
 
             } catch (error) {
-                console.error(error);
-                alert("AI Engine Error: Check API Key or Internet Connection.");
+                console.error("Critical Failure:", error);
+                alert("Neural Link Offline. Check API Key or Connection.");
                 location.reload();
             }
-        }
-
-        window.sync = function() {
-            document.getElementById('w-val').innerText = document.getElementById('weight').value;
-            document.getElementById('h-val').innerText = document.getElementById('height').value;
         }
     </script>
 </body>
