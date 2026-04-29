@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,21 +16,16 @@
     </script>
 
     <style>
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; min-height: 100vh; }
         .bg-gradient { background: radial-gradient(circle at top, #1a365d 0%, #000 70%); }
         .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 24px; }
         .neon-blue { text-shadow: 0 0 15px rgba(56, 189, 248, 0.6); }
-        .btn-glow:hover { box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transform: translateY(-2px); }
-        
-        /* Loading Animation */
         .loader { width: 48px; height: 48px; border: 5px solid #fff; border-bottom-color: #38bdf8; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
         .hidden { display: none; }
-        pre { white-space: pre-wrap; word-wrap: break-word; }
     </style>
 </head>
-<body class="bg-gradient p-4 md:p-10 flex flex-col items-center">
+<body class="bg-gradient p-6 flex flex-col items-center">
 
     <div class="w-full max-w-2xl space-y-10">
         <div class="text-center">
@@ -38,38 +33,38 @@
             <p class="text-[10px] text-gray-500 tracking-[0.5em] font-bold uppercase mt-2">Neural Fitness Engine v1.0</p>
         </div>
 
-        <div id="input-ui" class="glass p-8 space-y-8 animate-in fade-in duration-700">
+        <div id="input-ui" class="glass p-8 space-y-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current Weight (Kg)</label>
-                    <input type="number" id="weight" value="75" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500 transition-all">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">الوزن الحالي (كغ)</label>
+                    <input type="number" id="weight" value="75" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500 text-center">
                 </div>
                 <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Training Goal</label>
-                    <select id="goal" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500 transition-all">
-                        <option value="Massive Bulk" class="bg-black">Massive Bulk</option>
-                        <option value="Extreme Shred" class="bg-black">Extreme Shred</option>
-                        <option value="Athletic Performance" class="bg-black">Athletic Performance</option>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">هدف التدريب</label>
+                    <select id="goal" class="w-full bg-white/5 border border-white/10 p-4 rounded-xl font-bold outline-none focus:border-sky-500">
+                        <option value="Massive Bulk" class="bg-black text-white">تضخيم (Bulk)</option>
+                        <option value="Extreme Shred" class="bg-black text-white">تنشيف (Shred)</option>
+                        <option value="Performance" class="bg-black text-white">لياقة بدنية</option>
                     </select>
                 </div>
             </div>
 
-            <button onclick="executeProtocol()" id="action-btn" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.4em] text-xs btn-glow transition-all active:scale-95">
-                Execute AI Protocol_
+            <button onclick="executeProtocol()" id="action-btn" class="w-full bg-white text-black font-black py-5 rounded-2xl uppercase tracking-[0.4em] text-xs transition-all active:scale-95">
+                EXECUTE AI PROTOCOL_
             </button>
         </div>
 
         <div id="loading-ui" class="hidden text-center space-y-4 py-20">
             <span class="loader"></span>
-            <p class="text-sky-400 text-xs font-black tracking-widest animate-pulse uppercase">Syncing with Gemini Neural Link...</p>
+            <p class="text-sky-400 text-xs font-black tracking-widest animate-pulse">جاري الاتصال بـ GEMINI NEURAL LINK...</p>
         </div>
 
-        <div id="output-ui" class="hidden space-y-6 pb-20 animate-in slide-in-from-bottom duration-700">
+        <div id="output-ui" class="hidden space-y-6 pb-20">
             <div class="flex justify-between items-center">
-                <h2 class="text-xl font-black italic uppercase text-sky-400">Calculated Protocol</h2>
-                <button onclick="location.reload()" class="text-[9px] font-bold text-gray-500 hover:text-white uppercase tracking-widest">Reset Analysis</button>
+                <h2 class="text-xl font-black italic uppercase text-sky-400">البروتوكول المحسوب</h2>
+                <button onclick="location.reload()" class="text-[9px] font-bold text-gray-500 hover:text-white uppercase tracking-widest">إعادة التحليل</button>
             </div>
-            <div id="ai-response" class="glass p-6 text-sm text-gray-300 leading-relaxed border-sky-500/20 shadow-2xl shadow-sky-500/5">
+            <div id="ai-response" class="glass p-6 text-sm text-gray-300 leading-relaxed shadow-2xl shadow-sky-500/5">
                 </div>
         </div>
     </div>
@@ -77,43 +72,35 @@
     <script type="module">
         import { GoogleGenerativeAI } from "@google/generative-ai";
 
-        // حط الـ API Key الجديد هنا يا بايرم
+        // مفتاح الـ API الجديد الخاص بك
         const API_KEY = "AIzaSyCcXYIIOYNxyitBzfQl_0TaQD2xQB0yik0"; 
 
         window.executeProtocol = async function() {
             const weight = document.getElementById('weight').value;
             const goal = document.getElementById('goal').value;
-            const btn = document.getElementById('action-btn');
             
-            // UI Toggle
             document.getElementById('input-ui').classList.add('hidden');
             document.getElementById('loading-ui').classList.remove('hidden');
 
             try {
-                const genAI = new GoogleGenerativeAI(AIzaSyCcXYIIOYNxyitBzfQl_0TaQD2xQB0yik0);
+                const genAI = new GoogleGenerativeAI(API_KEY);
                 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-                const prompt = `Act as the Bikness AI Elite Coach. Generate a high-performance 4-week protocol for a user.
-                Stats: Weight ${weight}kg, Goal: ${goal}.
-                Your response must be in clean HTML format (no markdown blocks). 
-                Include:
-                1. A 'Daily Bio-Metrics' card with Calories, Protein, Carbs, Fats.
-                2. A '4-Week Training Cycle' table.
-                3. Use Tailwind CSS classes for styling (e.g., text-sky-400 for highlights, bg-white/5 for cards).
-                Tone: Futuristic, Professional, Motivational.`;
+                const prompt = `أنت مدرب Bikness AI المحترف. قم بإنشاء بروتوكول تدريب وتغذية لمدة 4 أسابيع لمستخدم وزنه ${weight} كجم وهدفه هو ${goal}. 
+                يجب أن تكون الإجابة بتنسيق HTML نظيف (بدون علامات markdown). 
+                استخدم كلاسات Tailwind CSS للتنسيق (مثل text-sky-400 للتمييز). 
+                اجعل النبرة حماسية واحترافية.`;
 
                 const result = await model.generateContent(prompt);
                 const response = await result.response;
-                const htmlContent = response.text();
-
-                // Display Result
+                
                 document.getElementById('loading-ui').classList.add('hidden');
                 document.getElementById('output-ui').classList.remove('hidden');
-                document.getElementById('ai-response').innerHTML = htmlContent;
+                document.getElementById('ai-response').innerHTML = response.text();
 
             } catch (error) {
-                console.error("Critical Failure:", error);
-                alert("Neural Link Offline. Check API Key or Connection.");
+                console.error(error);
+                alert("خطأ في الاتصال: تأكد من مفتاح الـ API الخاص بك.");
                 location.reload();
             }
         }
